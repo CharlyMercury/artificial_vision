@@ -68,3 +68,4 @@ y_test = to_categorical(test_labels_y)
 model.fit(x_train, y_train, epochs=8, batch_size=128)
 
 model.evaluate(x_test, y_test)
+print("HOla mundo")
