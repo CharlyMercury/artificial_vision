@@ -79,4 +79,38 @@ params['A1']=relu(params['Z1'])
 params['Z2']=np.matmul(params['A1'], params['W2'])+params['b2']
 params['A2']=relu(params['Z2'])
 
+# Tercer capa
+params['Z3']=np.matmul(params['A2'], params['W3'])+params['b3']
+params['A3']=sigmoid(params['Z3'])
+
+output = params['A3']
+
+
+# Backpropagation
+
+# Pesos en la última capa
+params['dZ3']=mse(Y, output, True)*sigmoid(params['A3'], True)
+params['dW3']=np.matmul(params['A2'].T, params['dZ3'])
+
+# Pesos en la penúltima capa
+params['dZ2']=np.matmul(params['dZ3'], params['W3'].T)*relu(params['A2', True])
+params['dW2']=np.matmul(params['A1'].T, params['dZ2'])
+
+# Pesos de la primer capa
+params['dZ1']=np.matmul(params['dZ2'], params['W2'].T)*relu(params['A1', True])
+params['dW1']=np.matmul(params['A0'].T, params['dZ1'])
+
+
+## Algoritmo del gradiente descendiente
+learning_rate = 0.0001
+params['W3']=params['W3']-params['dW3']*learing_rate
+params['W2']=params['W2']-params['dW2']*learing_rate
+params['W1']=params['W1']-params['dW1']*learing_rate
+
+params['b3']=params['b3']-(np.mean(params['dW3'], axis=0, keepdims=True))*learning_rate
+params['b2']=params['b2']-(np.mean(params['dW2'], axis=0, keepdims=True))*learning_rate
+params['b1']=params['b1']-(np.mean(params['dW1'], axis=0, keepdims=True))*learning_rate
+
+
+
 
