@@ -12,6 +12,7 @@
 
 """
 import cv2
+import scipy.ndimage as nd
 import numpy as np
 import matplotlib.pyplot as plt
 
