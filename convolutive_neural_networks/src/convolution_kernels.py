@@ -12,9 +12,9 @@
 
 """
 import cv2
-import scipy.ndimage as nd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def convolution_kernel():
@@ -23,8 +23,11 @@ def convolution_kernel():
     """
 
     # Cargamos la imagen utilizando OpenCV
-    path = r'C:\Users\carlo\OneDrive\Desktop\artificial_vision\convolutive_neural_networks\images\example_1.jpg'
-    img = cv2.imread(path)
+
+    current_path = Path(__file__).parent
+    images_folder = current_path.parent / "images"
+    image_path = images_folder / 'example_1.jpg'
+    img = cv2.imread(image_path)
 
     # Convertimos la imagen a RGB (viniendo del formato que lee opencv)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -49,25 +52,31 @@ def convolution_kernel():
 
     # Diccionario
     kernels = {
-        "Identidad (imagen original)": np.array([[0, 0, 0],
+        "Identidad (imagen original)": np.array([
+                                            [0, 0, 0],
                                             [0, 1, 0],
                                             [0, 0, 0]]),
         "Blur promedio (para suavizar el ruido)": (1/9)*np.ones((3,3)), 
-        "Blur gausiano (suavizado natural)": (1/16)*np.array([[1, 2, 1],
-                                                            [2, 4, 2],
-                                                            [1, 2, 1]]),
-        "Sobel Horizontal (detecta bordes horizontales)": np.array([[-1, -2, -1],
-                                                                [0, 0, 0],
-                                                                [1, 2, 1]]),
-        "Sobel Vertical (detecta bordes verticales)": np.array([[-1, 0, 1],
-                                                            [-2, 0, 2],
-                                                            [-1, 0, 1]]),
-        "Laplaciano (detecta bordes)": np.array([[0, -1, 0],
+        "Blur gausiano (suavizado natural)": (1/16)*np.array([
+                                            [1, 2, 1],
+                                            [2, 4, 2],
+                                            [1, 2, 1]]),
+        "Sobel Horizontal (detecta bordes horizontales)": np.array([
+                                            [-1, -2, -1],
+                                            [0, 0, 0],
+                                            [1, 2, 1]]),
+        "Sobel Vertical (detecta bordes verticales)": np.array([
+                                            [-1, 0, 1],
+                                            [-2, 0, 2],
+                                            [-1, 0, 1]]),
+        "Laplaciano (detecta bordes)": np.array([
+                                            [0, -1, 0],
                                             [-1, 4, -1],
                                             [0, -1, 0]]),
-        "Sharpen (realza detalles)": np.array([[0, -1, 0],
-                                                    [-1, 5, -1],
-                                                    [0, -1, 0]])
+        "Sharpen (realza detalles)": np.array([
+                                            [0, -1, 0],
+                                            [-1, 5, -1],
+                                            [0, -1, 0]])
     }
 
     # Creamos una figura con 2 filas y 4 columnas

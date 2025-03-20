@@ -39,7 +39,6 @@ def managing_images():
     images_folder = current_path.parent / "images"
     image_path = images_folder / 'artificial_vision.jpg'
     img = cv2.imread(image_path)
-    print(img)
     print(img.shape)
 
     plt.imshow(img)
@@ -58,6 +57,7 @@ def managing_images():
     green_color = np.dstack((aux_dim, green, aux_dim)).astype(np.uint8)
     blue_color = np.dstack((aux_dim, aux_dim, blue)).astype(np.uint8)
 
+
     axs_orgl = plt.subplots(1, 3, figsize=(16, 8))[1]
 
     axs_orgl[0].imshow(red_color)
@@ -75,10 +75,11 @@ def managing_images():
     plt.show()
 
     # Imagen rgb en negativo
-    img_gray_neg = 255 - img_rgb
-    plt.imshow(img_gray_neg)
+    img_rgb_neg = 255 - img_rgb
+    plt.imshow(img_rgb_neg)
     plt.axis('off')
     plt.show()
+
 
     # Convertimos la imagen a escala de grises
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
