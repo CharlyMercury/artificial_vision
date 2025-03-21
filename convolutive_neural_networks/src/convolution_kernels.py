@@ -45,7 +45,7 @@ kernels = {
         [-1,  0,  1]
     ]),
 
-    "laplaciano": np.array([
+    "laplaciano": 3* np.array([
         [ 0, -1,  0],
         [-1,  4, -1],
         [ 0, -1,  0]
@@ -90,7 +90,7 @@ def convolution_kernel():
     print(img_gray.shape)
 
     # Configuramos los plots
-    axs_orgl = plt.subplots(1, 2, figsize=(16, 8))
+    axs_orgl = plt.subplots(1, 2, figsize=(16, 8))[1]
 
     axs_orgl[0].imshow(img_rgb)
     axs_orgl[0].set_title("Imagen original")
@@ -113,7 +113,7 @@ def convolution_kernel():
                                             [1, 2, 1],
                                             [2, 4, 2],
                                             [1, 2, 1]]),
-        "Sobel Horizontal (detecta bordes horizontales)": np.array([
+        "Sobel Horizontal (detecta bordes horizontales)": 3*np.array([
                                             [-1, -2, -1],
                                             [0, 0, 0],
                                             [1, 2, 1]]),
@@ -121,7 +121,7 @@ def convolution_kernel():
                                             [-1, 0, 1],
                                             [-2, 0, 2],
                                             [-1, 0, 1]]),
-        "Laplaciano (detecta bordes)": np.array([
+        "Laplaciano (detecta bordes)": (3)*np.array([
                                             [0, -1, 0],
                                             [-1, 4, -1],
                                             [0, -1, 0]]),
