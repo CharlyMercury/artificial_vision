@@ -15,11 +15,17 @@ artificial_vision/
 │   └── src/
 │       ├── managing_images.py        # Image management module
 │       └── convolution_kernels.py    # Convolution kernel logic
+│   │
+│   └── documentation/
+│       ├── cnn_architecture  # CNN architecture explanation
+│       └── cnn_layers.py     # CNN layers details
 │
 └── neural_networks/
     ├── activations_functions/
     ├── keras_networks/
-    └── numpy_networks/```
+    └── numpy_networks/
+    
+```
 
 ---
 
