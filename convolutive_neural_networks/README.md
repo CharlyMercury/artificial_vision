@@ -64,7 +64,15 @@ pip install -r requirements.txt
 
 ---
 
+
 ## 🚀 How to Run the Project
+
+Go to folder where is located the `main.py` of this project:
+
+```bash
+cd convolutive_neural_networks
+```
+
 
 The `main.py` script accepts one of three arguments:
 
