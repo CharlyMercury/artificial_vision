@@ -43,3 +43,6 @@ model = Sequential([
 
 Esta estructura modular permite construir CNNs flexibles y adaptables a diferentes tipos de problemas de visión por computadora.
 
+
+### Aplicaciones de las CNN's
+https://ijcsit.com/docs/Volume%207/vol7issue5/ijcsit20160705014.pdf

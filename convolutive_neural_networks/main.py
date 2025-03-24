@@ -6,7 +6,7 @@
 """
 import sys
 from src.managing_images import managing_images
-from src.convolution_kernels import convolution_kernel, choose_one_kernel
+from src.convolution_kernels import convolution_kernel, convolution_video
 from src.cifar_classification import cifar_classification
 from src.data_aumentation import data_augmentation
 
@@ -15,12 +15,12 @@ def run(program_to_run):
     """
         Run the project.
     """
-    if program_to_run == 'conv_ker':
-        convolution_kernel()
-    elif program_to_run == 'mng_imgs':
+    if program_to_run == 'mng_imgs':
         managing_images()
+    elif program_to_run == 'conv_ker':
+        convolution_kernel()
     elif program_to_run == 'conv_video':
-        choose_one_kernel()
+        convolution_video()
     elif program_to_run == 'cifar':
         cifar_classification()
     elif program_to_run == 'data_augmentation':

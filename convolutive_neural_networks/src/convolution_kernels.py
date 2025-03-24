@@ -19,39 +19,39 @@ from pathlib import Path
 
 # Diccionario de Kernels de Convolución
 kernels = {
-    "identidad": np.array([
+    "Identidad": np.array([
         [0, 0, 0],
         [0, 1, 0],
         [0, 0, 0]
     ]),
 
-    "blur": (1 / 9) * np.ones((3, 3)),
+    "Blur": (1 / 9) * np.ones((3, 3)),
 
-    "gaussiano": (1 / 16) * np.array([
+    "Gaussiano": (1 / 16) * np.array([
         [1, 2, 1],
         [2, 4, 2],
         [1, 2, 1]
     ]),
 
-    "sobel_x": np.array([
+    "Sobel_x": np.array([
         [-1, -2, -1],
         [ 0,  0,  0],
         [ 1,  2,  1]
     ]),
 
-    "sobel_y": np.array([
+    "Sobel_y": np.array([
         [-1,  0,  1],
         [-2,  0,  2],
         [-1,  0,  1]
     ]),
 
-    "laplaciano": 3* np.array([
+    "Laplaciano": 3* np.array([
         [ 0, -1,  0],
         [-1,  4, -1],
         [ 0, -1,  0]
     ]),
 
-    "sharpen": np.array([
+    "Sharpen": np.array([
         [ 0, -1,  0],
         [-1,  5, -1],
         [ 0, -1,  0]
@@ -59,14 +59,7 @@ kernels = {
 }
 
 
-kernel_choose_list = [
-    "identidad", 
-    "blur", 
-    "gaussiano", 
-    "sobel_x", 
-    "sobel_y", 
-    "laplaciano", 
-    "sharpen"]
+kernel_choose_list = list(kernels.keys())
 
 
 def convolution_kernel():
@@ -102,35 +95,6 @@ def convolution_kernel():
 
     plt.show()
 
-    # Diccionario
-    kernels = {
-        "Identidad (imagen original)": np.array([
-                                            [0, 0, 0],
-                                            [0, 1, 0],
-                                            [0, 0, 0]]),
-        "Blur promedio (para suavizar el ruido)": (1/9)*np.ones((3,3)), 
-        "Blur gausiano (suavizado natural)": (1/16)*np.array([
-                                            [1, 2, 1],
-                                            [2, 4, 2],
-                                            [1, 2, 1]]),
-        "Sobel Horizontal (detecta bordes horizontales)": 3*np.array([
-                                            [-1, -2, -1],
-                                            [0, 0, 0],
-                                            [1, 2, 1]]),
-        "Sobel Vertical (detecta bordes verticales)": np.array([
-                                            [-1, 0, 1],
-                                            [-2, 0, 2],
-                                            [-1, 0, 1]]),
-        "Laplaciano (detecta bordes)": (3)*np.array([
-                                            [0, -1, 0],
-                                            [-1, 4, -1],
-                                            [0, -1, 0]]),
-        "Sharpen (realza detalles)": np.array([
-                                            [0, -1, 0],
-                                            [-1, 5, -1],
-                                            [0, -1, 0]])
-    }
-
     # Creamos una figura con 2 filas y 4 columnas
     fig, axs = plt.subplots(2, 4, figsize=(16, 8))
     axs = axs.flatten()
@@ -156,7 +120,10 @@ def convolution_kernel():
     plt.show()
 
 
-def convolution_video(kernel):
+def convolution_video():
+
+    kernel = choose_one_kernel()
+
     cap = cv2.VideoCapture(0)
     while True:
         ret, frame = cap.read()
@@ -176,16 +143,21 @@ def convolution_video(kernel):
 
 def choose_one_kernel():
 
-    kernel_choose = input("Choose one kernel to apply: \n"
-                            "0. identidad (imagen original)\n"
-                            "1. blur (para suavizar el ruido)\n"
-                            "2. gaussiano (suavizado natural)\n"
-                            "3. sobel_x (detecta bordes horizontales)\n"
-                            "4. sobel_y (detecta bordes verticales)\n"
-                            "5. laplaciano (detecta bordes)\n"
-                            "6. sharpen (realza detalles):\n"
-                            "Choose one option: ")
+    while True:
 
-    kernel = kernels.get(kernel_choose_list[int(kernel_choose)])
-    convolution_video(kernel)
+        kernel_choose = input("Choose one kernel to apply: \n"
+                                "0. Identidad (imagen original)\n"
+                                "1. Blur (para suavizar el ruido)\n"
+                                "2. Gaussiano (suavizado natural)\n"
+                                "3. Sobel_x (detecta bordes horizontales)\n"
+                                "4. Sobel_y (detecta bordes verticales)\n"
+                                "5. Laplaciano (detecta bordes)\n"
+                                "6. Sharpen (realza detalles):\n"
+                                "Choose one option: ")
+        
+        try:
+            kernel = kernels.get(kernel_choose_list[int(kernel_choose)])
+            return kernel
+        except Exception as err:
+            print(" \n Opción Inválida \n ")
     
