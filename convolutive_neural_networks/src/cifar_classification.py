@@ -1,15 +1,18 @@
 """
 This script is used to train a Convolutional Neural Network (CNN) to classify the CIFAR-10 dataset.
 """
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras import regularizers
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Activation
-# from tensorflow.keras.optimizers import Adam
-# from tensorflow.keras.callbacks import ModelCheckpoint
+from keras.datasets import cifar10
+from keras.utils import to_categorical
+from keras import regularizers
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout, Activation
 import numpy
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+# Obteber el directorio actual
+current_dir = Path(__file__).parent
+models_dir = current_dir.parent / 'trained_model_parameters'
 
 
 def cifar_classification():
@@ -54,56 +57,104 @@ def cifar_classification():
     
     # Capa convolucional 1
     model.add(Conv2D(
-        filtros, 
-        (3, 3), 
-        'same', 
-        regularizers.l2(regularizers), 
-        x_train.shape[1:]))
+        filters = filtros, 
+        kernel_size = (3, 3),
+        strides = (3, 3), 
+        padding = 'same', 
+        kernel_regularizer = regularizers.l2(regularizers_w), 
+        input_shape = x_train.shape[1:]))
     model.add(Activation('relu'))
 
     # Capa convolucional 2
     model.add(Conv2D(
-        filtros, 
-        (3, 3), 
-        'same', 
-        regularizers.l2(regularizers)))
+        filters = filtros, 
+        kernel_size = (3, 3),
+        strides = (3, 3), 
+        padding = 'same', 
+        kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(0.25))
 
     # Capa convolucional 3
     model.add(Conv2D(
-        filtros*2, 
-        (3, 3), 
-        'same', 
-        regularizers.l2(regularizers)))
+        filters = filtros*2, 
+        kernel_size = (3, 3),
+        strides = (3, 3), 
+        padding = 'same', 
+        kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
     model.add(Dropout(0.25))
 
     # Capa convolucional 4
     model.add(Conv2D(
-        filtros*2, 
-        (3, 3), 
-        'same', 
-        regularizers.l2(regularizers)))
+        filters = filtros*2, 
+        kernel_size = (3, 3),
+        strides = (3, 3), 
+        padding = 'same', 
+        kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(0.3))
 
     # Capa convolucional 5
     model.add(Conv2D(
-        filtros*4, 
-        (3, 3), 
-        'same', 
-        regularizers.l2(regularizers)))
+        filters = filtros*4, 
+        kernel_size = (3, 3),
+        strides = (3, 3), 
+        padding = 'same', 
+        kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
 
     # Capa convolucional 6
     model.add(Conv2D(
-        filtros*4, 
-        (3, 3), 
-        'same', 
-        regularizers.l2(regularizers)))
+        filters = filtros*4, 
+        kernel_size = (3, 3),
+        strides = (3, 3), 
+        padding = 'same', 
+        kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(0.4))
+
+    # Capa de flatten
+    model.add(Flatten())
+    model.add(Dense(n_clases, activation='softmax'))
+    
+    # Resumen del modelo
+    model.summary()
+
+    # Página de visualización de modelos de redes neuronales 
+    # convolucionales: https://poloclub.github.io/cnn-explainer/
+
+    # Compilación del modelo
+    model.compile(
+        loss='categorical_crossentropy',
+        optimizer='rmsprop',
+        metrics=['accuracy'])
+
+    # Entrenamiento del modelo
+    history = model.fit(
+        x_train, y_train,
+        batch_size=32,
+        epochs=100,
+        validation_data=(x_valid, y_valid),
+        verbose = 2,
+        shuffle=True)
+    
+    # Guardar el modelo
+    model_path = models_dir / 'cifar10.keras'
+    model.save(model_path)
+
+    # Gráfica de la precisión del modelo
+    plt.plot(history.history['accuracy'], label='accuracy')
+    plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.title('Model accuracy')
+    plt.show()
+
+    # Evaluación del modelo
+    score = model.evaluate(x_test, y_test, verbose=0)
+    print('Test loss:', score[0])
+    print('Test accuracy:', score[1])
