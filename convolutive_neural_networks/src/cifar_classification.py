@@ -27,7 +27,7 @@ def cifar_classification():
     print(x_test.shape[0], 'test samples')
     
     # Cifar10 tiene 10 clases de objetos
-    plt.imshow(x_train[2])
+    plt.imshow(x_train[0])
     plt.show()
 
     ## Vamos a normalizar las imágenes
@@ -95,7 +95,7 @@ def cifar_classification():
         kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
     model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
-    model.add(Dropout(0.3))
+    model.add(Dropout(0.25))
 
     # Capa convolucional 5
     model.add(Conv2D(
