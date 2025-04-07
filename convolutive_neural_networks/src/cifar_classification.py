@@ -6,7 +6,10 @@ from keras.utils import to_categorical
 from keras import regularizers
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout, Activation
-import numpy
+from keras.callbacks import EarlyStopping
+from keras.callbacks import ModelCheckpoint
+from keras.layers import BatchNormalization
+from numpy import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
@@ -14,6 +17,7 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 models_dir = current_dir.parent / 'trained_model_parameters'
 
+# LOGGING
 
 def cifar_classification():
     """
@@ -35,7 +39,7 @@ def cifar_classification():
     x_test = x_test.astype('float32')/255
     
     ## Cantidad de clases
-    n_clases = len(numpy.unique(y_train))
+    n_clases = len(np.unique(y_train))
     y_train = to_categorical(y_train, n_clases)
     y_test = to_categorical(y_test, n_clases)
 
@@ -84,6 +88,7 @@ def cifar_classification():
         padding = 'same', 
         kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
+    model.add(BatchNormalization())
     model.add(Dropout(0.25))
 
     # Capa convolucional 4
@@ -133,6 +138,17 @@ def cifar_classification():
         optimizer='rmsprop',
         metrics=['accuracy'])
 
+    early_stopping = EarlyStopping(
+        monitor='accuracy',
+        patience=2,
+        verbose=1)
+    
+    model_checkpoint = ModelCheckpoint(
+        filepath=models_dir / 'bestcifar10.keras',
+        monitor='accuracy',
+        save_best_only=True,
+        verbose=1)
+
     # Entrenamiento del modelo
     history = model.fit(
         x_train, y_train,
@@ -140,8 +156,9 @@ def cifar_classification():
         epochs=100,
         validation_data=(x_valid, y_valid),
         verbose = 2,
-        shuffle=True)
-    
+        shuffle=True,
+        callbacks=[model_checkpoint, early_stopping])
+ 
     # Guardar el modelo
     model_path = models_dir / 'cifar10.keras'
     model.save(model_path)
