@@ -7,9 +7,11 @@ import os
 
 def create_image(label):
     """
+
+    hOLA Cris
     Capture images from the webcam and save them to a specified directory.
     
-    Parameters:
+    params:
     label (str): The label for the gesture (e.g., "pulgar_arriba").
     """
     # Create a directory to save the images
