@@ -7,8 +7,11 @@ from keras import regularizers
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPool2D, Flatten, Dense, Dropout, Activation
 from keras.callbacks import EarlyStopping
+from keras import optimizers
 from keras.callbacks import ModelCheckpoint
 from keras.layers import BatchNormalization
+from keras.preprocessing.image import ImageDataGenerator
+from datetime import datetime
 from numpy import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -18,6 +21,19 @@ current_dir = Path(__file__).parent
 models_dir = current_dir.parent / 'trained_model_parameters'
 
 # LOGGING
+
+
+#
+data_generator = ImageDataGenerator(
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode='nearest',
+        brightness_range=[0.4, 1.5]
+    )
+
 
 def cifar_classification():
     """
@@ -68,6 +84,7 @@ def cifar_classification():
         kernel_regularizer = regularizers.l2(regularizers_w), 
         input_shape = x_train.shape[1:]))
     model.add(Activation('relu'))
+    model.add(BatchNormalization())
 
     # Capa convolucional 2
     model.add(Conv2D(
@@ -77,6 +94,7 @@ def cifar_classification():
         padding = 'same', 
         kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
+    model.add(BatchNormalization())
     model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(0.25))
 
@@ -99,6 +117,7 @@ def cifar_classification():
         padding = 'same', 
         kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
+    model.add(BatchNormalization())
     model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(0.25))
 
@@ -110,6 +129,7 @@ def cifar_classification():
         padding = 'same', 
         kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
+    model.add(BatchNormalization())
 
     # Capa convolucional 6
     model.add(Conv2D(
@@ -119,6 +139,7 @@ def cifar_classification():
         padding = 'same', 
         kernel_regularizer = regularizers.l2(regularizers_w)))
     model.add(Activation('relu'))
+    model.add(BatchNormalization())
     model.add(MaxPool2D(pool_size=(2, 2), padding='same'))
     model.add(Dropout(0.4))
 
@@ -135,29 +156,32 @@ def cifar_classification():
     # Compilación del modelo
     model.compile(
         loss='categorical_crossentropy',
-        optimizer='rmsprop',
+        optimizer=optimizers.Adam(),
         metrics=['accuracy'])
 
     early_stopping = EarlyStopping(
         monitor='accuracy',
         patience=2,
         verbose=1)
-    
+
+    dt = datetime.now()
+    ts = datetime.timestamp(dt)
     model_checkpoint = ModelCheckpoint(
-        filepath=models_dir / 'bestcifar10.keras',
+        filepath=models_dir / f'bestcifar10{ts}.keras',
         monitor='accuracy',
         save_best_only=True,
         verbose=1)
 
     # Entrenamiento del modelo
     history = model.fit(
-        x_train, y_train,
+        data_generator.flow(x_train, y_train, batch_size=32),
+        steps_per_epoch=len(x_train) / 32,
         batch_size=32,
         epochs=100,
         validation_data=(x_valid, y_valid),
         verbose = 2,
         shuffle=True,
-        callbacks=[model_checkpoint, early_stopping])
+        callbacks=[model_checkpoint])
  
     # Guardar el modelo
     model_path = models_dir / 'cifar10.keras'
